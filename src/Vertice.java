@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class Vertice {
+public class Vertice implements Cloneable {
 
     private Integer idVertice;
     private String nome;
@@ -10,6 +10,10 @@ public class Vertice {
     private boolean inicial;
 
     public Vertice() {
+    }
+
+    public Vertice(int valor) {
+        this.valor = valor;
     }
 
     public Vertice(String nome) {
@@ -89,5 +93,10 @@ public class Vertice {
     @Override
     public int hashCode() {
         return Objects.hash(idVertice, nome);
+    }
+
+    @Override
+    public Vertice clone() throws CloneNotSupportedException {
+        return (Vertice) super.clone();
     }
 }

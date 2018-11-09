@@ -8,7 +8,7 @@ public class Main {
     private static final String NAO_VISITADO = "Branco";
     private static final String VISITADO = "Cinza";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         Grafo grafo = new Grafo();
 
         configuracoesIniciais(grafo);
@@ -42,6 +42,10 @@ public class Main {
 
                 case 6:
                     algoritmoKruskal(grafo);
+                    break;
+
+                case 7:
+                    algoritmoPrimJarnik(grafo);
                     break;
 
                 default:
@@ -300,6 +304,40 @@ public class Main {
         }
 
         return 0;
+    }
+
+    private static void algoritmoPrimJarnik(Grafo grafo) throws CloneNotSupportedException {
+        List<Aresta> arestas = grafo.getArestas();
+        List<Vertice> vertices = grafo.getVertices();
+        List<Vertice> verticesVisitados = new ArrayList<>();
+        Vertice verticeVisitado = grafo.getVerticeInicial();
+
+        while (verticesVisitados.size() != vertices.size()) {
+
+            //todo corrigir esse if
+            if(!verticesVisitados.contains(verticeVisitado)) {
+                Vertice verticeMenorValor = new Vertice(Integer.MAX_VALUE);
+                for (Vertice adjacente : obterAdjacentes(false, arestas, verticeVisitado)) {
+                    int valorVertice = valorArestaEntreVertices(verticeVisitado, adjacente, arestas);
+                    adjacente.setValor(valorVertice);
+
+                    if(adjacente.getValor() < verticeMenorValor.getValor())
+                        verticeMenorValor = adjacente;
+                }
+                verticeMenorValor.setCaminho(verticeVisitado.clone());
+                verticesVisitados.add(verticeVisitado.clone());
+                verticeVisitado = verticeMenorValor;
+            }
+        }
+
+        StringBuilder resultado = new StringBuilder("Tabela\n\n");
+        for (Vertice vertice: verticesVisitados) {
+            resultado.append("Vértice: "+vertice.getNome());
+            resultado.append(" - Valor: ");
+            resultado.append(vertice.getValor());
+            resultado.append("\n");
+        }
+        output(resultado.toString(), "Teste");
     }
 
 }
