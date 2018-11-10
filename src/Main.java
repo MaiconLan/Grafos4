@@ -120,6 +120,7 @@ public class Main {
         }
         Vertice vertice = obterVertice(grafo, Integer.parseInt(input("Selecione o código do vértice inicial: \n" + resultado)));
         vertice.setInicial(true);
+        vertice.setValor(0);
     }
 
     public static void adicionarArestaDireto(Grafo grafo) {
@@ -309,25 +310,28 @@ public class Main {
     private static void algoritmoPrimJarnik(Grafo grafo) throws CloneNotSupportedException {
         List<Aresta> arestas = grafo.getArestas();
         List<Vertice> vertices = grafo.getVertices();
+        List<Vertice> verticeQueue = new ArrayList<>(vertices);
         List<Vertice> verticesVisitados = new ArrayList<>();
-        Vertice verticeVisitado = grafo.getVerticeInicial();
+        Vertice verticeVisitado = verticeMenorValor(verticeQueue);
 
-        while (verticesVisitados.size() != vertices.size()) {
+        while (!verticeQueue.isEmpty()) {
 
-            //todo corrigir esse if
-            if(!verticesVisitados.contains(verticeVisitado)) {
-                Vertice verticeMenorValor = new Vertice(Integer.MAX_VALUE);
-                for (Vertice adjacente : obterAdjacentes(false, arestas, verticeVisitado)) {
+            Vertice verticeMenorValor = new Vertice(Integer.MAX_VALUE);
+            for (Vertice adjacente : obterAdjacentes(false, arestas, verticeVisitado)) {
+                if(adjacente.getCor().equals(NAO_VISITADO)){
                     int valorVertice = valorArestaEntreVertices(verticeVisitado, adjacente, arestas);
                     adjacente.setValor(valorVertice);
 
                     if(adjacente.getValor() < verticeMenorValor.getValor())
                         verticeMenorValor = adjacente;
                 }
-                verticeMenorValor.setCaminho(verticeVisitado.clone());
-                verticesVisitados.add(verticeVisitado.clone());
-                verticeVisitado = verticeMenorValor;
             }
+
+            verticeMenorValor.setCaminho(verticeVisitado.clone());
+            verticesVisitados.add(verticeVisitado.clone());
+            verticeQueue.remove(verticeVisitado.clone());
+            verticeVisitado = verticeMenorValor;
+            verticeVisitado.setCor(VISITADO);
         }
 
         StringBuilder resultado = new StringBuilder("Tabela\n\n");
@@ -338,6 +342,15 @@ public class Main {
             resultado.append("\n");
         }
         output(resultado.toString(), "Teste");
+    }
+
+    private static Vertice verticeMenorValor(List<Vertice> vertices){
+        Vertice verticeMenorValor = new Vertice(Integer.MAX_VALUE);
+        for (Vertice vertice : vertices) {
+            if(vertice.getValor() < verticeMenorValor.getValor())
+                verticeMenorValor = vertice;
+        }
+        return verticeMenorValor;
     }
 
 }
