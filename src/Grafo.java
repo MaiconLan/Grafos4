@@ -8,11 +8,23 @@ public class Grafo {
     private List<Vertice> vertices = new ArrayList<>();
     private List<Aresta> arestas = new ArrayList<>();
 
-    public Vertice getVerticeInicial(){
-        return vertices.stream()
-                .filter(vertice -> vertice.isInicial())
-                .findFirst()
-                .get();
+    private Vertice verticeInicial;
+    private Vertice verticeFinal;
+
+    public Vertice getVerticeInicial() {
+        return verticeInicial;
+    }
+
+    public Vertice getVerticeFinal() {
+        return verticeFinal;
+    }
+
+    public void setVerticeInicial(Vertice verticeInicial) {
+        this.verticeInicial = verticeInicial;
+    }
+
+    public void setVerticeFinal(Vertice verticeFinal) {
+        this.verticeFinal = verticeFinal;
     }
 
     public List<Vertice> getVertices() {
